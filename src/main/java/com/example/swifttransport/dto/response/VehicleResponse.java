@@ -2,6 +2,7 @@ package com.example.swifttransport.dto.response;
 
 import lombok.Builder;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -18,4 +19,6 @@ public record VehicleResponse(
     DriverSummaryResponse currentDriver,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
-) {}
+) implements Serializable {
+    private static final long serialVersionUID = 1L;
+}

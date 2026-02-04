@@ -36,10 +36,7 @@ public class VehicleService implements VehicleServiceInterface{
      {@inheritDoc}
      */
     @Transactional
-    @Caching(evict = {
-        @CacheEvict(value = RedisConfig.CACHE_VEHICLES, allEntries = true),
-        @CacheEvict(value = RedisConfig.CACHE_VEHICLE_BY_ID, key = "#result.id")
-    })
+    @CacheEvict(value = RedisConfig.CACHE_VEHICLES, allEntries = true)
     public VehicleResponse createVehicle(CreateVehicleRequest request) {
         log.debug("Creating new vehicle with registration: {}", request.registrationNumber());
         
@@ -168,8 +165,7 @@ public class VehicleService implements VehicleServiceInterface{
             var driver = activeAssignment.getDriver();
             currentDriver = DriverSummaryResponse.builder()
                     .id(driver.getId())
-                    .firstName(driver.getFirstName())
-                    .lastName(driver.getLastName())
+                    .fullName(driver.getFullName())
                     .licenseNumber(driver.getLicenseNumber())
                     .build();
         }
