@@ -1,5 +1,6 @@
 package com.example.swifttransport.service;
 
+import com.example.swifttransport.config.RedisConfig;
 import com.example.swifttransport.dto.request.CreateDriverRequest;
 import com.example.swifttransport.dto.request.UpdateDriverRequest;
 import com.example.swifttransport.dto.response.DriverListResponse;
@@ -12,6 +13,9 @@ import com.example.swifttransport.mapper.DriverMapper;
 import com.example.swifttransport.repository.DriverRepository;
 import com.example.swifttransport.repository.VehicleAssignmentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,13 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class DriverService {
+public class DriverService implements DriverServiceInterface {
 
     private final DriverRepository driverRepository;
     private final VehicleAssignmentRepository assignmentRepository;
     private final DriverMapper driverMapper;
 
     @Transactional
+    @CacheEvict(value = RedisConfig.CACHE_DRIVERS, allEntries = true)
     public DriverResponse createDriver(CreateDriverRequest request) {
         if (driverRepository.existsByLicenseNumber(request.licenseNumber())) {
             throw new BusinessValidationException(
@@ -39,6 +44,10 @@ public class DriverService {
         return driverMapper.toResponse(saved);
     }
 
+    @Cacheable(
+        value = RedisConfig.CACHE_DRIVERS,
+        key = "'page:' + #pageable.pageNumber + ':size:' + #pageable.pageSize + ':status:' + #status + ':search:' + #search + ':deleted:' + #includeDeleted"
+    )
     public DriverListResponse getDrivers(Pageable pageable,
                                          DriverStatus status,
                                          String search,
@@ -69,6 +78,7 @@ public class DriverService {
                 .build();
     }
 
+    @Cacheable(value = RedisConfig.CACHE_DRIVER_BY_ID, key = "#id")
     public DriverResponse getDriverById(Long id) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(id)
             .orElseThrow(() -> new ResourceNotFoundException("Driver", id));
@@ -76,6 +86,10 @@ public class DriverService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = RedisConfig.CACHE_DRIVERS, allEntries = true),
+        @CacheEvict(value = RedisConfig.CACHE_DRIVER_BY_ID, key = "#id")
+    })
     public DriverResponse updateDriver(Long id, UpdateDriverRequest request) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(id)
             .orElseThrow(() -> new ResourceNotFoundException("Driver", id));
@@ -86,6 +100,10 @@ public class DriverService {
     }
 
     @Transactional
+    @Caching(evict = {
+        @CacheEvict(value = RedisConfig.CACHE_DRIVERS, allEntries = true),
+        @CacheEvict(value = RedisConfig.CACHE_DRIVER_BY_ID, key = "#id")
+    })
     public void deleteDriver(Long id) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(id)
             .orElseThrow(() -> new ResourceNotFoundException("Driver", id));
