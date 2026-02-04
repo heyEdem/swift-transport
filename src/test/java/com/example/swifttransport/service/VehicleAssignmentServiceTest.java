@@ -69,7 +69,8 @@ class VehicleAssignmentServiceTest {
     void setUp() {
         driver = Driver.builder()
                 .id(1L)
-                .fullName("Kwame Mensah")
+                .firstName("Kwame")
+                .lastName("Mensah")
                 .status(DriverStatus.ACTIVE)
                 .deleted(false)
                 .build();
