@@ -70,7 +70,6 @@ public class VehicleService implements VehicleServiceInterface{
         Page<Vehicle> vehiclePage;
 
         if (search != null && !search.isBlank()) {
-            // Search by registration number, make, or model
             vehiclePage = vehicleRepository.findByRegistrationNumberContainingOrMakeContainingOrModelContaining(
                     search, search, search, pageable);
         } else if (activeOnly != null && activeOnly) {
@@ -165,7 +164,8 @@ public class VehicleService implements VehicleServiceInterface{
             var driver = activeAssignment.getDriver();
             currentDriver = DriverSummaryResponse.builder()
                     .id(driver.getId())
-                    .fullName(driver.getFullName())
+                    .firstName(driver.getFirstName())
+                    .lastName(driver.getLastName())
                     .licenseNumber(driver.getLicenseNumber())
                     .build();
         }

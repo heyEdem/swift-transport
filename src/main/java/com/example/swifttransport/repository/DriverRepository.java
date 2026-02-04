@@ -25,13 +25,13 @@ public interface DriverRepository extends JpaRepository<Driver, Long> {
     Page<Driver> findAllByStatusAndDeletedFalse(DriverStatus status, Pageable pageable);
 
     @Query("SELECT d FROM Driver d WHERE d.deleted = false AND " +
-           "(LOWER(d.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "(LOWER(CONCAT(d.firstName, ' ', d.lastName)) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "d.phoneNumber LIKE CONCAT('%', :search, '%') OR " +
            "d.licenseNumber LIKE CONCAT('%', :search, '%'))")
     Page<Driver> searchDrivers(@Param("search") String search, Pageable pageable);
 
     @Query("SELECT d FROM Driver d WHERE d.deleted = false AND d.status = :status AND " +
-           "(LOWER(d.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "(LOWER(CONCAT(d.firstName, ' ', d.lastName)) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "d.phoneNumber LIKE CONCAT('%', :search, '%') OR " +
            "d.licenseNumber LIKE CONCAT('%', :search, '%'))")
     Page<Driver> searchDriversByStatus(@Param("search") String search,
