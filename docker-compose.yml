@@ -18,11 +18,26 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: swift-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build: .
-    container_name: swift-app
+    container_name: swift-transport
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     environment:
       DB_HOST: postgres
@@ -30,8 +45,9 @@ services:
       DB_NAME: swift_transport
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       JWT_SECRET: your-super-secret-jwt-key-change-this-in-production-256-bits
-      SPRING_PROFILES_ACTIVE: dev
     ports:
       - "8080:8080"
     volumes:
@@ -39,3 +55,4 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:

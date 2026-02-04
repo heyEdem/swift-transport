@@ -9,9 +9,13 @@ import lombok.Builder;
 
 @Builder
 public record CreateDriverRequest(
-    @NotBlank(message = "Full name is required")
-    @Size(min = 2, max = 255, message = "Full name must be between 2 and 255 characters")
-    String fullName,
+    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 100, message = "First name must be between 2 and 100 characters")
+    String firstName,
+
+    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters")
+    String lastName,
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number format")
