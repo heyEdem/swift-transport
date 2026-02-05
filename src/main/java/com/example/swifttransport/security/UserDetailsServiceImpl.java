@@ -2,6 +2,7 @@ package com.example.swifttransport.security;
 
 import com.example.swifttransport.entity.User;
 import com.example.swifttransport.repository.UserRepository;
+import static com.example.swifttransport.util.CustomMessages.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +21,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_PREFIX + username));
 
         if (!user.getActive()) {
-            throw new UsernameNotFoundException("User is not active: " + username);
+            throw new UsernameNotFoundException(USER_NOT_ACTIVE_PREFIX + username);
         }
 
         return new org.springframework.security.core.userdetails.User(

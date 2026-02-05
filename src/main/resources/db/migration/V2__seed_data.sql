@@ -1,13 +1,13 @@
 -- Insert default admin user (password: Admin@123)
 INSERT INTO users (username, email, password, role, active) VALUES
 ('admin@swift.com', 'admin@swift.com',
- '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5GyYJyxjJXu.i',
+ '$2a$12$E7.i1.Ey41WV6JBXqN86f.6LSBcu.IF4lmjiO1ZuRcgoCFFU1hbce',
  'ADMIN', true);
 
 -- Insert default operations user (password: Ops@123)
 INSERT INTO users (username, email, password, role, active) VALUES
 ('ops@swift.com', 'ops@swift.com',
- '$2a$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+ '$2a$12$WEM2QsKT6ErRQFapjXU2J.jZ.KWbRh/pivltRlxVDg281nSc2bDD6',
  'OPERATIONS', true);
 
 -- Insert sample vehicles

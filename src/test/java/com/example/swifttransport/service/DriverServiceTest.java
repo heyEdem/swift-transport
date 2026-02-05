@@ -52,7 +52,8 @@ class DriverServiceTest {
     void setUp() {
         driver = Driver.builder()
                 .id(1L)
-                .fullName("Kwame Mensah")
+                .firstName("Kwame")
+                .lastName("Mensah")
                 .phoneNumber("+233244111111")
                 .licenseNumber("DL001234567")
                 .status(DriverStatus.ACTIVE)
@@ -61,7 +62,8 @@ class DriverServiceTest {
 
         driverResponse = DriverResponse.builder()
                 .id(1L)
-                .fullName("Kwame Mensah")
+                .firstName("Kwame")
+                .lastName("Mensah")
                 .phoneNumber("+233244111111")
                 .licenseNumber("DL001234567")
                 .status(DriverStatus.ACTIVE)
@@ -71,7 +73,8 @@ class DriverServiceTest {
     @Test
     void createDriver_Success() {
         CreateDriverRequest request = CreateDriverRequest.builder()
-                .fullName("Kwame Mensah")
+                .firstName("Kwame")
+                .lastName("Mensah")
                 .phoneNumber("+233244111111")
                 .licenseNumber("DL001234567")
                 .status(DriverStatus.ACTIVE)
@@ -85,7 +88,8 @@ class DriverServiceTest {
         DriverResponse result = driverService.createDriver(request);
 
         assertThat(result).isNotNull();
-        assertThat(result.fullName()).isEqualTo("Kwame Mensah");
+        assertThat(result.firstName()).isEqualTo("Kwame");
+        assertThat(result.lastName()).isEqualTo("Mensah");
         verify(driverRepository).save(any(Driver.class));
     }
 

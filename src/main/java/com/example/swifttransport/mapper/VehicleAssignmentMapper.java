@@ -23,7 +23,8 @@ public interface VehicleAssignmentMapper {
         }
         return DriverSummaryResponse.builder()
                 .id(assignment.getDriver().getId())
-                .fullName(assignment.getDriver().getFullName())
+                .firstName(assignment.getDriver().getFirstName())
+                .lastName(assignment.getDriver().getLastName())
                 .licenseNumber(assignment.getDriver().getLicenseNumber())
                 .build();
     }

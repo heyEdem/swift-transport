@@ -28,25 +28,29 @@ spring:
         default_batch_fetch_size: 20
     open-in-view: false
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
   flyway:
     enabled: true
-    baseline-on-migrate: true
+    baseline-on-migrate: false
     locations: classpath:db/migration
     validate-on-migrate: true
 
 server:
   port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
-    include-stacktrace: on_param
-    include-exception: false
 
 app:
   jwt:
     secret: ${JWT_SECRET:change-this-to-a-secure-secret-key-in-production-minimum-256-bits}
     expiration: 86400000
     issuer: swift-transport
+  rate-limit:
+    login:
+      max-requests: 5
+      window-duration-seconds: 60
 
 logging:
   level:

@@ -5,12 +5,16 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
+import static com.example.swifttransport.util.CustomMessages.*;
 @Builder
 public record UpdateDriverRequest(
-    @Size(min = 2, max = 255, message = "Full name must be between 2 and 255 characters")
-    String fullName,
+    @Size(min = 2, max = 100, message = VALIDATION_FIRST_NAME_SIZE)
+    String firstName,
 
-    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = "Invalid phone number format")
+    @Size(min = 2, max = 100, message = VALIDATION_LAST_NAME_SIZE)
+    String lastName,
+
+    @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$", message = VALIDATION_PHONE_FORMAT)
     String phoneNumber,
 
     DriverStatus status

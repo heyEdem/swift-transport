@@ -9,11 +9,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    hibernate:
+      ddl-auto: update
 
 app:
   jwt:
     secret: dev-secret-key-not-for-production-use-only-development-purpose
     expiration: 86400000
+  rate-limit:
+    login:
+      max-requests: 5
+      window-duration-seconds: 60
 
 logging:
   level:
