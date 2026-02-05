@@ -12,6 +12,7 @@ import com.example.swifttransport.exception.ResourceNotFoundException;
 import com.example.swifttransport.mapper.DriverMapper;
 import com.example.swifttransport.repository.DriverRepository;
 import com.example.swifttransport.repository.VehicleAssignmentRepository;
+import static com.example.swifttransport.util.CustomMessages.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -34,9 +35,7 @@ public class DriverService implements DriverServiceInterface {
     @CacheEvict(value = RedisConfig.CACHE_DRIVERS, allEntries = true)
     public DriverResponse createDriver(CreateDriverRequest request) {
         if (driverRepository.existsByLicenseNumber(request.licenseNumber())) {
-            throw new BusinessValidationException(
-                "A driver with this license number already exists"
-            );
+            throw new BusinessValidationException(VALIDATION_LICENSE_ALREADY_EXISTS);
         }
 
         Driver driver = driverMapper.toEntity(request);
@@ -81,7 +80,7 @@ public class DriverService implements DriverServiceInterface {
     @Cacheable(value = RedisConfig.CACHE_DRIVER_BY_ID, key = "#id")
     public DriverResponse getDriverById(Long id) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Driver", id));
+            .orElseThrow(() -> new ResourceNotFoundException(DRIVER_NOT_FOUND));
         return driverMapper.toResponse(driver);
     }
 
@@ -92,7 +91,7 @@ public class DriverService implements DriverServiceInterface {
     })
     public DriverResponse updateDriver(Long id, UpdateDriverRequest request) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Driver", id));
+            .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_DRIVER, id));
 
         driverMapper.updateEntityFromRequest(request, driver);
         Driver updated = driverRepository.save(driver);
@@ -106,12 +105,10 @@ public class DriverService implements DriverServiceInterface {
     })
     public void deleteDriver(Long id) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Driver", id));
+            .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_DRIVER, id));
 
         if (assignmentRepository.existsByDriverIdAndIsActiveTrue(id)) {
-            throw new BusinessValidationException(
-                "Cannot delete driver with active vehicle assignment. Please unassign vehicle first."
-            );
+            throw new BusinessValidationException(VALIDATION_CANNOT_DELETE_ASSIGNED_DRIVER);
         }
 
         driver.setDeleted(true);

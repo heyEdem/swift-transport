@@ -41,4 +41,5 @@ public class VehicleAssignment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_by", nullable = false)
     private User assignedBy;
+
 }

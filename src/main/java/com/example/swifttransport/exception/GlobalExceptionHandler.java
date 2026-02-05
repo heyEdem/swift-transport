@@ -1,6 +1,7 @@
 package com.example.swifttransport.exception;
 
 import com.example.swifttransport.dto.response.ApiErrorResponse;
+import com.example.swifttransport.util.CustomMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleResourceNotFound(
             ResourceNotFoundException ex, WebRequest request) {
-        log.warn("Resource not found: {}", ex.getMessage());
+        log.warn(CustomMessages.LOG_RESOURCE_NOT_FOUND, ex.getMessage());
         ApiErrorResponse error = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.NOT_FOUND.value())
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessValidationException.class)
     public ResponseEntity<ApiErrorResponse> handleBusinessValidation(
             BusinessValidationException ex, WebRequest request) {
-        log.warn("Business validation failed: {}", ex.getMessage());
+        log.warn(CustomMessages.LOG_BUSINESS_VALIDATION_FAILED, ex.getMessage());
         ApiErrorResponse error = ApiErrorResponse.builder()
             .timestamp(LocalDateTime.now())
             .status(HttpStatus.BAD_REQUEST.value())
@@ -71,7 +72,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorResponse> handleAccessDenied(
             AccessDeniedException ex, WebRequest request) {
-        log.warn("Access denied: {}", ex.getMessage());
+        log.warn(CustomMessages.LOG_ACCESS_DENIED, ex.getMessage());
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.FORBIDDEN.value())
@@ -86,7 +87,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
-        log.error("Unexpected error occurred", ex);
+        log.error(CustomMessages.LOG_UNEXPECTED_ERROR, ex);
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
