@@ -16,6 +16,7 @@ import com.example.swifttransport.repository.DriverRepository;
 import com.example.swifttransport.repository.UserRepository;
 import com.example.swifttransport.repository.VehicleAssignmentRepository;
 import com.example.swifttransport.repository.VehicleRepository;
+import static com.example.swifttransport.util.CustomMessages.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -46,30 +47,30 @@ public class VehicleAssignmentService {
     })
     public AssignmentResponse assignVehicle(AssignVehicleRequest request) {
         Driver driver = driverRepository.findByIdAndDeletedFalse(request.driverId())
-            .orElseThrow(() -> new ResourceNotFoundException("Driver", request.driverId()));
+            .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_DRIVER, request.driverId()));
 
         if (driver.getStatus() != DriverStatus.ACTIVE) {
-            throw new BusinessValidationException("Driver must be ACTIVE to assign vehicle");
+            throw new BusinessValidationException(VALIDATION_DRIVER_MUST_BE_ACTIVE);
         }
 
         Vehicle vehicle = vehicleRepository.findById(request.vehicleId())
-            .orElseThrow(() -> new ResourceNotFoundException("Vehicle", request.vehicleId()));
+            .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_VEHICLE, request.vehicleId()));
 
         if (!vehicle.getActive()) {
-            throw new BusinessValidationException("Vehicle is not active");
+            throw new BusinessValidationException(VALIDATION_VEHICLE_NOT_ACTIVE);
         }
 
         if (assignmentRepository.existsByDriverIdAndIsActiveTrue(request.driverId())) {
-            throw new BusinessValidationException("Driver already has an active vehicle assignment");
+            throw new BusinessValidationException(VALIDATION_DRIVER_ALREADY_ASSIGNED);
         }
 
         if (assignmentRepository.existsByVehicleIdAndIsActiveTrue(request.vehicleId())) {
-            throw new BusinessValidationException("Vehicle is already assigned to another driver");
+            throw new BusinessValidationException(VALIDATION_VEHICLE_ALREADY_ASSIGNED);
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User assignedBy = userRepository.findByUsername(username)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
+            .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_PREFIX + username));
 
         VehicleAssignment assignment = VehicleAssignment.builder()
             .driver(driver)
@@ -92,7 +93,7 @@ public class VehicleAssignmentService {
     public AssignmentResponse unassignVehicle(Long driverId) {
         VehicleAssignment assignment = assignmentRepository.findByDriverIdAndIsActiveTrue(driverId)
             .orElseThrow(() -> new ResourceNotFoundException(
-                "No active assignment found for driver with id: " + driverId));
+                NO_ACTIVE_ASSIGNMENT_PREFIX + driverId));
 
         assignment.setIsActive(false);
         assignment.setUnassignedAt(java.time.LocalDateTime.now());

@@ -56,6 +56,7 @@ public class CustomMessages {
 
     // Resource not found message templates
     public static final String USER_NOT_FOUND_PREFIX = "User not found: ";
+    public static final String USER_NOT_ACTIVE_PREFIX = "User is not active: ";
     public static final String NO_ACTIVE_ASSIGNMENT_PREFIX = "No active assignment found for driver with id: ";
 
     // Validation messages for Vehicle
