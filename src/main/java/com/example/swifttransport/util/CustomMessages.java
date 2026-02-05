@@ -9,6 +9,9 @@ public class CustomMessages {
     public static final String LOG_ACCESS_DENIED = "Access denied: {}";
     public static final String LOG_UNEXPECTED_ERROR = "Unexpected error occurred";
 
+    // Rate limiting
+    public static final String LOG_RATE_LIMIT_EXCEEDED = "Rate limit exceeded for IP {} on {}";
+
     // Logger messages for JWT
     public static final String LOG_JWT_TOKEN_EXPIRED = "JWT token is expired: {}";
     public static final String LOG_JWT_TOKEN_UNSUPPORTED = "JWT token is unsupported: {}";
@@ -53,6 +56,7 @@ public class CustomMessages {
 
     // Resource not found message templates
     public static final String USER_NOT_FOUND_PREFIX = "User not found: ";
+    public static final String USER_NOT_ACTIVE_PREFIX = "User is not active: ";
     public static final String NO_ACTIVE_ASSIGNMENT_PREFIX = "No active assignment found for driver with id: ";
 
     // Validation messages for Vehicle
