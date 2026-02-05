@@ -73,26 +73,27 @@ public class GlobalExceptionHandler {
             AccessDeniedException ex, WebRequest request) {
         log.warn("Access denied: {}", ex.getMessage());
         ApiErrorResponse error = ApiErrorResponse.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.FORBIDDEN.value())
-            .error(HttpStatus.FORBIDDEN.getReasonPhrase())
-            .message("Access denied")
-            .path(request.getDescription(false).replace("uri=", ""))
-            .build();
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.FORBIDDEN.value())
+                .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+                .message("Access denied")
+                .path(request.getDescription(false).replace("uri=", ""))
+                .build();
         return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
         log.error("Unexpected error occurred", ex);
         ApiErrorResponse error = ApiErrorResponse.builder()
-            .timestamp(LocalDateTime.now())
-            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-            .message("An unexpected error occurred")
-            .path(request.getDescription(false).replace("uri=", ""))
-            .build();
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .message("An unexpected error occurred")
+                .path(request.getDescription(false).replace("uri=", ""))
+                .build();
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
