@@ -9,6 +9,9 @@ public class CustomMessages {
     public static final String LOG_ACCESS_DENIED = "Access denied: {}";
     public static final String LOG_UNEXPECTED_ERROR = "Unexpected error occurred";
 
+    // Rate limiting
+    public static final String LOG_RATE_LIMIT_EXCEEDED = "Rate limit exceeded for IP {} on {}";
+
     // Logger messages for JWT
     public static final String LOG_JWT_TOKEN_EXPIRED = "JWT token is expired: {}";
     public static final String LOG_JWT_TOKEN_UNSUPPORTED = "JWT token is unsupported: {}";
